@@ -1,54 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Photography Portfolio</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body { font-family: Playfair Display, sans-serif; margin: 0; background: #f4f4f4; }
-        header { background: #222; color: #fff; padding: 2rem 0; text-align: center; }
-        nav { background: #333; padding: 0.5rem 0; text-align: center; }
-        nav a { color: #fff; margin: 0 1rem; text-decoration: none; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 2rem; }
-        .gallery img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
-        footer { background: #222; color: #fff; text-align: center; padding: 1rem 0; margin-top: 2rem; }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Rudra's Photography</h1>
-        <p>Collecting moments from today... Creating memories that will last for a lifetime.</p>
-        <p>Keep visiting our site.</p>
-    </header>
-    <nav>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    <section id="portfolio" class="gallery">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Nature Photo">
-        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" alt="Portrait Photo">
-        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="City Photo">
-        <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=400&q=80" alt="Wildlife Photo">
-        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80" alt="Landscape Photo">
-        <img src="https://images.unsplash.com/photo-1444065381814-865dc9da92c0?auto=format&fit=crop&w=400&q=80" alt="Waterfall Photo">
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
 
-    </section>
-    <section id="about" style="padding:2rem; background:#fff;">
-        <h2>About Me</h2>
-        <p>Hello! I'm Rudra MS, a passionate photo collector specializing in nature & events. My goal is to make people happy.</p>
-    </section>
-    <section id="contact" style="padding:2rem;">
-        <h2>Contact</h2>
-        <form>
-            <label>Name:<br><input type="text" name="name" required></label><br><br>
-            <label>Email:<br><input type="email" name="email" required></label><br><br>
-            <label>Message:<br><textarea name="message" rows="4" required></textarea></label><br><br>
-            <button type="submit">Send</button>
-        </form>
-    </section>
+const app = express();
+const PORT = 3000;
+
+// Serve images statically
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.get('/', (req, res) => {
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nature & Universe Gallery</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+      }
+      header {
+        padding: 40px 20px 10px;
+      }
+      header h1 {
+        font-size: 3em;
+        margin: 0;
+      }
+      header p {
+        color: #ccc;
+        margin-top: 10px;
+        font-size: 1.2em;
+      }
+      #gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 10px;
+        padding: 20px;
+        max-width: 1400px;
+        margin: auto;
+      }
+      #gallery img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      footer {
+        padding: 20px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Nature & Universe</h1>
+      <p>A journey through Earth's beauty and the cosmos</p>
+    </header>
+    <main>
+      <div id="gallery">
+        ${[...Array(10).keys()].map(i => `<img src="/images/image${i + 1}.jpg" alt="Nature ${i + 1}">`).join('')}
+      </div>
+    </main>
     <footer>
-        &copy; 2025 Rudra Photography
+      <p>&copy; 2025 Nature & Universe Photography</p>
     </footer>
-</body>
-</html>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+app.listen(PORT, () => {
+  console.log(`📸 Site running at http://localhost:${PORT}`);
+});
